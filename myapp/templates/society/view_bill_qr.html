@@ -1,0 +1,586 @@
+{% extends 'society/base.html' %}
+
+{% block extra_css %}
+<style>
+    :root {
+        /* Enhanced color palette */
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --primary-light: #60a5fa;
+        --primary-bg: #eff6ff;
+        --text: #1e293b;
+        --text-light: #64748b;
+        --text-lighter: #94a3b8;
+        --border: #e2e8f0;
+        --background: #f8fafc;
+        --background-dark: #f1f5f9;
+        --success: #059669;
+        --success-light: #d1fae5;
+        --warning: #eab308;
+        --warning-light: #fef3c7;
+        --error: #dc2626;
+        --error-light: #fee2e2;
+
+        /* Shadows */
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        --shadow-glow: 0 0 15px rgba(37, 99, 235, 0.1);
+    }
+
+    body {
+        background-color: #f8fafc;
+        background-image: 
+            radial-gradient(at 100% 0%, rgba(37, 99, 235, 0.1) 0px, transparent 50%),
+            radial-gradient(at 0% 100%, rgba(5, 150, 105, 0.1) 0px, transparent 50%);
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 3rem auto;
+        padding: 0 1.5rem;
+    }
+
+    .card {
+        background: white;
+        border-radius: 24px;
+        box-shadow: var(--shadow-lg),
+                    0 0 0 1px rgba(0, 0, 0, 0.02);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg), var(--shadow-glow);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        padding: 2rem;
+        border-bottom: 1px solid var(--border);
+        position: relative;
+    }
+
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .card-header h2 {
+        margin: 0;
+        color: white;
+        font-size: 1.875rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header h2 i {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.75rem;
+        border-radius: 12px;
+        font-size: 1.5rem;
+    }
+
+    .status-badge {
+        margin-left: auto;
+        padding: 0.625rem 1.25rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .status-badge.paid {
+        background: var(--success-light);
+        color: var(--success);
+    }
+
+    .status-badge.pending {
+        background: var(--warning-light);
+        color: var(--warning);
+    }
+
+    .status-badge.overdue {
+        background: var(--error-light);
+        color: var(--error);
+    }
+
+    .card-content {
+        display: flex;
+        gap: 3rem;
+        align-items: flex-start;
+        padding: 2.5rem;
+        background: white;
+    }
+
+    .qr-display {
+        flex-shrink: 0;
+        position: relative;
+        padding: 1.5rem;
+        background: var(--background);
+        border-radius: 1.5rem;
+        transition: all 0.3s ease;
+        border: 2px solid var(--border);
+    }
+
+    .qr-display:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--primary-light);
+    }
+
+    .qr-display img {
+        width: 280px;
+        height: 280px;
+        object-fit: contain;
+        border-radius: 1rem;
+        display: block;
+        transition: all 0.3s ease;
+    }
+
+    .qr-display:hover img {
+        transform: scale(1.02);
+    }
+
+    .qr-status {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: var(--success);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: var(--shadow-md);
+    }
+
+    .bill-details {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .detail-group {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+        background: var(--background);
+        border-radius: 1rem;
+        border: 1px solid var(--border);
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .detail-label {
+        color: var(--text-light);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .detail-value {
+        color: var(--text);
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    .detail-value.amount {
+        color: var(--primary);
+        font-size: 2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: baseline;
+        gap: 0.25rem;
+    }
+
+    .detail-value.amount::before {
+        content: '₹';
+        font-size: 1.5rem;
+        color: var(--text-light);
+    }
+
+    .actions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+        outline: none;
+    }
+
+    .btn i {
+        font-size: 1.25rem;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-secondary {
+        background: var(--background);
+        color: var(--text);
+        border: 2px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+        background: var(--background-dark);
+        transform: translateY(-2px);
+        border-color: var(--primary-light);
+    }
+
+    .payment-instructions {
+        margin-top: 2rem;
+        padding: 1.75rem;
+        background: var(--primary-bg);
+        border-radius: 1rem;
+        font-size: 0.9375rem;
+        color: var(--text);
+        border: 1px solid var(--primary-light);
+    }
+
+    .payment-instructions h3 {
+        color: var(--primary);
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .payment-instructions ol {
+        padding-left: 1.5rem;
+        counter-reset: step;
+    }
+
+    .payment-instructions li {
+        counter-increment: step;
+        position: relative;
+        padding-left: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .payment-instructions li:last-child {
+        margin-bottom: 0;
+    }
+
+    .payment-instructions li::before {
+        content: counter(step);
+        position: absolute;
+        left: -2rem;
+        width: 1.5rem;
+        height: 1.5rem;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transform: translateY(150%);
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 1000;
+        border: 1px solid var(--border);
+    }
+
+    .toast i {
+        color: var(--success);
+        font-size: 1.25rem;
+    }
+
+    .toast.show {
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            margin: 1rem auto;
+        }
+
+        .card-content {
+            flex-direction: column;
+            gap: 2rem;
+            padding: 1.5rem;
+        }
+
+        .qr-display {
+            align-self: center;
+        }
+
+        .qr-display img {
+            width: 240px;
+            height: 240px;
+        }
+
+        .detail-group {
+            grid-template-columns: 1fr;
+            padding: 1rem;
+        }
+
+        .actions {
+            flex-direction: column;
+        }
+
+        .btn.btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .card-header {
+            padding: 1.5rem;
+        }
+
+        .card-header h2 {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .status-badge {
+            margin-left: 0;
+            align-self: flex-start;
+        }
+
+        .payment-instructions {
+            padding: 1.25rem;
+        }
+    }
+
+    /* Print styles */
+    @media print {
+        body {
+            background: none;
+        }
+
+        .card {
+            box-shadow: none;
+            border: 1px solid #ddd;
+        }
+
+        .actions, .payment-instructions {
+            display: none;
+        }
+
+        .qr-display {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                <i class="fas fa-qrcode"></i>
+                Payment QR Code - Bill #{{ bill.bill_number }}
+                {% if bill.status == 'PAID' %}
+                    <span class="status-badge paid">
+                        <i class="fas fa-check-circle"></i>
+                        Payment Received
+                    </span>
+                {% elif bill.is_overdue %}
+                    <span class="status-badge overdue">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Payment Overdue
+                    </span>
+                {% else %}
+                    <span class="status-badge pending">
+                        <i class="fas fa-clock"></i>
+                        Awaiting Payment
+                    </span>
+                {% endif %}
+            </h2>
+        </div>
+        <div class="card-content">
+            <div class="qr-display">
+                {% if bill.qr_code %}
+                    <div class="qr-status">
+                        <i class="fas fa-check-circle"></i> Active
+                    </div>
+                    <img src="{{ bill.qr_code.url }}" 
+                         alt="Payment QR Code for Bill #{{ bill.bill_number }}"
+                         loading="lazy">
+                {% else %}
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>QR code not available</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="bill-details">
+                <div class="detail-group">
+                    <div class="detail-item">
+                        <span class="detail-label">Bill Number</span>
+                        <span class="detail-value">#{{ bill.bill_number }}</span>
+                    </div>
+                    {% if bill.amount %}
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Due</span>
+                        <span class="detail-value amount">{{ bill.amount|floatformat:2 }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="detail-group">
+                    <div class="detail-item">
+                        <span class="detail-label">Description</span>
+                        <span class="detail-value">{{ bill.description }}</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Created On</span>
+                        <span class="detail-value">{{ bill.created_at|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+
+                {% if bill.due_date %}
+                <div class="detail-group">
+                    <div class="detail-item">
+                        <span class="detail-label">Due Date</span>
+                        <span class="detail-value">{{ bill.due_date|date:"F d, Y" }}</span>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="actions">
+                    <button class="btn btn-primary" onclick="downloadQR()">
+                        <i class="fas fa-download"></i> Download QR Code
+                    </button>
+                    <button class="btn btn-secondary" onclick="shareBill()">
+                        <i class="fas fa-share-alt"></i> Share Bill Details
+                    </button>
+                </div>
+
+                <div class="payment-instructions">
+                    <h3>
+                        <i class="fas fa-info-circle"></i>
+                        Payment Instructions
+                    </h3>
+                    <ol>
+                        <li>Open your preferred UPI payment app (Google Pay, PhonePe, Paytm, etc.)</li>
+                        <li>Locate and tap on the "Scan QR" option in your payment app</li>
+                        <li>Point your camera at the QR code displayed above</li>
+                        <li>Verify that the amount and recipient details are correct</li>
+                        <li>Complete the payment using your UPI PIN</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-message"></span>
+</div>
+
+<script>
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toast-message');
+    toastMessage.textContent = message;
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 3000);
+}
+
+function downloadQR() {
+    const qrImage = document.querySelector('.qr-display img');
+    if (qrImage) {
+        const link = document.createElement('a');
+        link.href = qrImage.src;
+        link.download = 'bill-{{ bill.bill_number }}-qr.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('QR code downloaded successfully');
+    }
+}
+
+function shareBill() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Bill #{{ bill.bill_number }}',
+            text: 'Payment QR Code for Bill #{{ bill.bill_number }} - Amount: ₹{{ bill.amount|floatformat:2 }}',
+            url: window.location.href
+        })
+        .then(() => showToast('Bill details shared successfully'))
+        .catch(err => console.error('Error sharing:', err));
+    } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = window.location.href;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showToast('Bill link copied to clipboard');
+    }
+}
+</script>
+{% endblock %}

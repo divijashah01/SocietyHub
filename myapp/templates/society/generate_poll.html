@@ -1,0 +1,98 @@
+<!-- society/templates/society/generate_poll.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Poll</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'society/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .poll-form {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .option-input {
+            margin-bottom: 10px;
+        }
+
+        .btn-submit {
+            background-color: #2563eb;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sticky-header">
+        <div class="header-content">
+            <div class="profile-section">
+                <div class="profile-picture">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="society-name">
+                    <h1>{{ location }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="poll-form">
+            <h2>Create New Poll</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="question" class="form-label">Question</label>
+                    <input type="text" id="question" name="question" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Options</label>
+                    {% for i in "1234" %}
+                    <div class="option-input">
+                        <input type="text" name="option{{ forloop.counter }}" class="form-control" 
+                               placeholder="Option {{ forloop.counter }}" required>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="datetime-local" id="end_date" name="end_date" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Create Poll</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

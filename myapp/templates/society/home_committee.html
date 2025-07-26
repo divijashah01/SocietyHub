@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Society Management System</title>
+    <!--{% load static %}
+    <link rel="stylesheet" href="{% static 'society/style.css' %}">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
+    <style>
+        /*basic*/
+        :root {
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-light: #475569;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--card-bg);
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav a {
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.625rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after {
+            width: 80%;
+        }
+
+        .nav a:hover {
+            color: var(--primary);
+        }
+
+        .main-content {
+            max-width: 1500px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -8px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            color: var(--text);
+            margin-bottom: 1.75rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .announcement {
+            margin-bottom: 1.5rem;
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background-color: var(--background);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .announcement:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .announcement:last-child {
+            margin-bottom: 0;
+        }
+
+        .announcement h3 {
+            color: var(--text);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .announcement p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .button {
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(59, 130, 246, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        /*** Polls page ***/
+        .poll-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .poll-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+        }
+
+        .poll-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .poll-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .poll-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: var(--background);
+        }
+
+        .poll-option:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .poll-option input[type="radio"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary);
+        }
+
+        .poll-end-date {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .button {
+            width: 50   ;
+            margin-top: 1rem;
+        }
+
+        /* Poll form specific styles */
+        .option-input {
+            margin-bottom: 10px;
+        }
+
+        /* bills page */
+        .bill-management .card-content {
+            max-height: 400px;
+            /*overflow-y: auto;*/
+        }
+
+        .bill-type-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            background-color: var(--card-bg);
+        }
+
+        .bill-type-info h4 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .bill-type-info p {
+            margin: 0.25rem 0 0;
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+
+        .bill-type-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-toggle {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            background: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+
+        .btn-toggle.active {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .btn-delete {
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+            width: 2rem;
+            border: 1px solid white;
+            background: none;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            /*overflow-y: auto;  /* Allow scrolling for tall modals */
+            padding: 20px 0;   /* Add padding to ensure modal isn't flush with edges */
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: var(--card-bg);
+            margin: 2% auto;  /* Changed from 15% to 5% to position higher */
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;  /* Limit height to 90% of viewport */
+            overflow-y: auto;  /* Allow scrolling inside modal if content is tall */
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .qr-upload-container {
+            border: 2px dashed var(--border);
+            padding: 1rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+
+        .qr-preview {
+            margin-top: 1rem;
+            max-width: 200px;
+            margin: 1rem auto 0;
+        }
+
+        .qr-preview img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .view-qr-btn {
+            padding: 0.25rem 0.75rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+        
+        .modal-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .modal-header h3 {
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--light-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        button.btn-secondary {
+            background-color: white;
+            border: 2px solid var(--border);
+            color: #4b5563;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button.btn-secondary:hover {
+            background-color: #f9fafb;
+            border-color: #9ca3af;
+        }
+
+        button.btn-primary {
+            background-color: var(--primary);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button.btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .upload-icon {
+            color: #9ca3af;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text {
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        /* Styles for the announcement form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body> 
+    <!-- Rest of your HTML remains unchanged -->
+</style>
+</head>
+<body> 
+    {% csrf_token %}
+
+    <header class="header">
+        <div class="header-content">
+            <h1>{{ location }}</h1>
+            <nav class="nav">
+                <a href="{% url 'view_complaints' %}">Complaints</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="card">
+            <h2>📢 Announcements</h2>
+            <button onclick="openAnnouncementModal()" class="button" style="text-decoration: none;">
+                <i class="fas fa-plus"></i> New Announcement
+            </button>
+            {% if announcements %}
+                {% for announcement in announcements %}
+                    <div class="announcement">
+                        <h3>{{ announcement.title }}</h3>
+                        <p>{{ announcement.content }}</p>
+                        <small style="font-size: 0.72rem; padding-top: 0.1rem;"><i class="fa-regular fa-calendar"></i> {{ announcement.created_at|date:"F d, Y" }} 
+                            - {{ announcement.created_at|time:"H:i" }}</small>
+                    </div>
+                    {% if not forloop.last %}
+                        <hr>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p>No announcements yet.</p>
+            {% endif %}
+        </section>
+
+        <!-- Add this after the announcements card -->
+        <section class="card">
+            <h2>📊 Active Polls</h2>
+            <button onclick="openPollModal()" class="button" style="text-decoration: none;">
+                <i class="fas fa-plus"></i> Add Polls
+            </button>
+            {% if active_polls %}
+                {% for poll in active_polls %}
+                <div class="poll-container">
+                    <div class="poll-title" id="poll-{{ poll.id }}">
+                        <h4>{{ poll.question }}</h4>
+                    </div>
+                        <p><small>Created on {{ poll.created_at|date:"F d, Y" }} | Ends on {{ poll.end_date|date:"F d, Y" }}</small></p>
+                        
+                        <div class="poll-options" data-poll-id="{{ poll.id }}">
+                            {% for option in poll.options.all %}
+                                {% with vote_count=option.votes.count %}
+                                    <div class="poll-option {% if option.is_leading %}leading{% endif %} {% if poll.user_has_voted and option == poll.user_choice %}voted{% endif %}"
+                                        data-option-id="{{ option.id }}"
+                                        {% if not poll.user_has_voted %}onclick="votePoll({{ poll.id }}, {{ option.id }})"{% endif %}>
+                                        <div class="option-header">
+                                            <span class="option-text">{{ option.option_text }}</span>
+                                            <span class="vote-count">{{ vote_count }} votes</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: '{{ option.vote_percentage }}%'">
+                                                {% if poll.user_has_voted and option == poll.user_choice %}
+                                                    <span class="your-vote-indicator">Your vote</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endwith %}
+                            {% endfor %}
+                        </div>
+                        
+                        {% if poll.user_has_voted %}
+                            <div class="thank-you-message">
+                                <i class="fas fa-check-circle"></i>
+                                <p>Thank you for voting!</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if not forloop.last %}<hr>{% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No active polls.</p>
+            {% endif %}
+        </section>
+
+        <section class="card">
+            <h2>💳 Bills & Payments</h2>
+            <button class="button" onclick="openBillModal()">
+                <i class="fas fa-plus"></i> Add Bill Type
+            </button>
+            <br><br>
+            <div class="card-content">
+                <div class="bill-types-list">
+                    {% if active_bill_types %}
+                        {% for bill in active_bill_types %}
+                            <div class="bill-type-item">
+                                <div class="bill-type-info">
+                                    <h4>{{ bill.bill_number }}</h4>
+                                    <p>{{ bill.description }}</p>
+                                </div>
+                                <div class="bill-type-actions">
+                                    <!--<button class="btn-toggle {% if bill.is_active %}active{% endif %}"
+                                            onclick="toggleBillStatus('{{ bill.id }}')">
+                                        {{ bill.is_active|yesno:"Active,Inactive" }}
+                                    </button>-->
+                                    <button class="btn-delete" onclick="deleteBillType('{{ bill.id }}')">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No bill types added yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- NEW: Announcement Modal -->
+    <div id="announcementModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Announcement</h3>
+            </div>
+            
+            <form id="announcementForm" method="POST" action="{% url 'create_announcement' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" id="title" name="title" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea id="content" name="content" class="form-control" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="due_date" class="form-label">Due Date (Optional for reminders)</label>
+                    <input type="date" id="due_date" name="due_date" class="form-control">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAnnouncementModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-bullhorn"></i> Post Announcement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- NEW: Poll Modal -->
+    <div id="pollModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Poll</h3>
+            </div>
+            
+            <form id="pollForm" method="POST" action="{% url 'generate_poll' %}">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="question" class="form-label">Question</label>
+                    <input type="text" id="question" name="question" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Options</label>
+                    {% for i in "1234" %}
+                    <div class="option-input">
+                        <input type="text" name="option{{ forloop.counter }}" class="form-control" 
+                               placeholder="Option {{ forloop.counter }}" required>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="form-group">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="datetime-local" id="end_date" name="end_date" class="form-control" required>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closePollModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-chart-bar"></i> Create Poll
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add this modal at the end of the body - SINGLE MODAL IMPLEMENTATION -->
+    <div id="billModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Bill Type</h3>
+            </div>
+            
+            <form id="billTypeForm" method="POST" action="{% url 'add_bill_type' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="input-group">
+                    <label for="billNumber">Bill Number</label>
+                    <input 
+                        type="text" 
+                        id="billNumber" 
+                        name="bill_number" 
+                        placeholder="Enter bill number"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label for="description">Description</label>
+                    <input 
+                        type="text" 
+                        id="description" 
+                        name="description" 
+                        placeholder="Enter bill description"
+                        required
+                    >
+                </div>
+
+                <div class="input-group">
+                    <label for="duedate">Due Date</label>
+                    <input 
+                        type="datetime-local" 
+                        id="duedate" 
+                        name="due_date" 
+                        placeholder="Enter due date"
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <label for="qrCode">Payment QR Code</label>
+                    <div class="qr-upload-container" onclick="document.getElementById('qrCode').click()">
+                        <div class="upload-icon">📤</div>
+                        <div class="upload-text">Click to upload QR code</div>
+                        <div class="upload-hint">Supports: JPG, PNG (Max: 5MB)</div>
+                        <input 
+                            type="file" 
+                            id="qrCode" 
+                            name="qr_code" 
+                            accept="image/*" 
+                            required
+                            style="display: none;"
+                        >
+                        <div id="qrPreview" class="qr-preview"></div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeBillModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Bill Type</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openBillModal() {
+            document.getElementById('billModal').style.display = 'block';
+            
+            // Scroll to the top of the modal when opening
+            setTimeout(() => {
+                const modalContent = document.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.scrollTop = 0;
+                }
+            }, 100);
+        }
+
+        function closeBillModal() {
+            document.getElementById('billModal').style.display = 'none';
+        }
+
+        function toggleBillStatus(billId) {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            fetch(`/toggle-bill-status/${billId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    location.reload();
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function deleteBillType(billId) {
+            if (confirm('Are you sure you want to delete this bill type?')) {
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                
+                fetch(`/delete-bill-type/${billId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'X-CSRFToken': csrfToken
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        location.reload();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+
+        // NEW: Announcement Modal Functions
+        function openAnnouncementModal() {
+            document.getElementById('announcementModal').style.display = 'block';
+            
+            // Scroll to the top of the modal when opening
+            setTimeout(() => {
+                const modalContent = document.getElementById('announcementModal').querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.scrollTop = 0;
+                }
+            }, 100);
+        }
+
+        function closeAnnouncementModal() {
+            document.getElementById('announcementModal').style.display = 'none';
+        }
+
+        // NEW: Poll Modal Functions
+        function openPollModal() {
+            document.getElementById('pollModal').style.display = 'block';
+            
+            // Scroll to the top of the modal when opening
+            setTimeout(() => {
+                const modalContent = document.getElementById('pollModal').querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.scrollTop = 0;
+                }
+            }, 100);
+        }
+
+        function closePollModal() {
+            document.getElementById('pollModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const billModal = document.getElementById('billModal');
+            const announcementModal = document.getElementById('announcementModal');
+            const pollModal = document.getElementById('pollModal');
+            
+            if (event.target == billModal) {
+                billModal.style.display = "none";
+            }
+            
+            if (event.target == announcementModal) {
+                announcementModal.style.display = "none";
+            }
+
+            if (event.target == pollModal) {
+                pollModal.style.display = "none";
+            }
+        }
+
+        document.getElementById('qrCode').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('qrPreview');
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" alt="QR Preview">`;
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.innerHTML = '';
+            }
+        });
+
+        function votePoll(pollId, optionId) {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            fetch(`/vote_poll/${pollId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': csrfToken
+                },
+                body: `choice=${optionId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const pollOptions = document.querySelector(`.poll-options[data-poll-id="${pollId}"]`);
+                    
+                    // Update all options
+                    data.results.options.forEach(option => {
+                        const optionElement = pollOptions.querySelector(`[data-option-id="${option.id}"]`);
+                        if (optionElement) {
+                            // Update progress bar
+                            const progressBar = optionElement.querySelector('.progress');
+                            progressBar.style.width = `${option.percentage}%`;
+                            
+                            // Update vote count
+                            optionElement.querySelector('.vote-count').textContent = `${option.votes} votes`;
+                            
+                            // Clear previous leading/voted classes
+                            optionElement.classList.remove('leading', 'voted');
+                            
+                            // Add appropriate classes
+                            if (option.is_leading) {
+                                optionElement.classList.add('leading');
+                            }
+                            if (option.id === optionId) {
+                                optionElement.classList.add('voted');
+                                progressBar.innerHTML = '<span class="your-vote-indicator">Your vote</span>';
+                            }
+                        }
+                    });
+                    
+                    // Add thank you message
+                    const pollItem = pollOptions.closest('.poll-item');
+                    if (!pollItem.querySelector('.thank-you-message')) {
+                        const thankYouMessage = document.createElement('div');
+                        thankYouMessage.className = 'thank-you-message';
+                        thankYouMessage.innerHTML = '<i class="fas fa-check-circle"></i><p>Thank you for voting!</p>';
+                        pollItem.appendChild(thankYouMessage);
+                    }
+                    
+                    // Disable further voting
+                    pollOptions.querySelectorAll('.poll-option').forEach(option => {
+                        option.removeAttribute('onclick');
+                        option.style.cursor = 'default';
+                    });
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

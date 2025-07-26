@@ -1,0 +1,343 @@
+{% extends 'society/base.html' %}
+{% block content %}
+<style>
+    :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --secondary: #f8fafc;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --success: #059669;
+        --warning: #d97706;
+        --info: #487cec;
+        --border: #e2e8f0;
+    }
+
+    .complaints-list {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        margin: 2rem auto;
+        max-width: 1200px;
+        overflow: hidden;
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 1.5rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .card-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, 
+            rgba(255,255,255,0.1) 0%,
+            rgba(255,255,255,0.3) 50%,
+            rgba(255,255,255,0.1) 100%);
+    }
+
+    .card-header h2 {
+        margin: 0;
+        color: white;
+        font-size: 1.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .btn-create {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-create:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .card-content {
+        padding: 2rem;
+    }
+
+    .complaint-item {
+        background: var(--secondary);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+    }
+
+    .complaint-item:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .complaint-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .complaint-header h3 {
+        margin: 0;
+        color: var(--text-primary);
+        font-size: 1.25rem;
+        font-weight: 600;
+        flex: 1;
+    }
+
+    .complaint-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin: 1rem 0;
+        white-space: pre-line;
+    }
+
+    .status-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 24px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 120px;
+        justify-content: center;
+    }
+
+    .status-badge::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .status-badge.pending {
+        background: #fef3c7;
+        color: var(--warning);
+    }
+    .status-badge.pending::before {
+        background: var(--warning);
+    }
+
+    .status-badge.in_progress {
+        background: #dbeafe;
+        color: var(--info);
+    }
+    .status-badge.in_progress::before {
+        background: var(--info);
+    }
+
+    .status-badge.resolved {
+        background: #dcfce7;
+        color: var(--success);
+    }
+    .status-badge.resolved::before {
+        background: var(--success);
+    }
+
+    .complaint-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        color: var(--text-secondary);
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .complaint-meta small {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .complaint-meta i {
+        font-size: 1rem;
+        opacity: 0.7;
+    }
+
+    .committee-actions {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+        font-weight: 500;
+    }
+
+    select, textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        background-color: white;
+    }
+
+    select:focus, textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    textarea {
+        height: 120px;
+        resize: vertical;
+        line-height: 1.5;
+    }
+
+    .btn-update {
+        background: var(--primary);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .btn-update:hover {
+        background: var(--primary-dark);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-secondary);
+    }
+
+    @media (max-width: 640px) {
+        .complaint-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .complaint-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .status-badge {
+            align-self: flex-start;
+        }
+    }
+</style>
+
+<div class="complaints-list">
+    <div class="card-header">
+        <h2><i class="fas fa-clipboard-list"></i> {% if member.member_type == 'committee' %}All Complaints{% else %}My Complaints{% endif %}</h2>
+        {% if member.member_type != 'committee' %}
+        <a href="{% url 'submit_complaint' %}" class="btn-create">
+            <i class="fas fa-plus"></i> New Complaint
+        </a>
+        {% endif %}
+    </div>
+    
+    <div class="card-content">
+        {% if complaints %}
+            {% for complaint in complaints %}
+                <div class="complaint-item">
+                    <div class="complaint-header">
+                        <h3>{{ complaint.title }}</h3>
+                        <span class="status-badge {{ complaint.status }}">
+                            <i class="fas fa-{% if complaint.status == 'pending' %}clock{% elif complaint.status == 'in_progress' %}spinner{% else %}check-circle{% endif %}"></i>
+                            {{ complaint.status|title }}
+                        </span>
+                    </div>
+                    
+                    <p class="complaint-description">{{ complaint.description }}</p>
+                    
+                    <div class="complaint-meta">
+                        <small>
+                            <i class="fas fa-user"></i>
+                            Submitted by: {{ complaint.created_by.user.username }}
+                        </small>
+                        <small>
+                            <i class="fas fa-calendar"></i>
+                            {{ complaint.created_at|date:"F d, Y" }}
+                        </small>
+                        <small>
+                            <i class="fas fa-clock"></i>
+                            {{ complaint.created_at|time:"H:i" }}
+                        </small>
+                    </div>
+                    
+                    {% if member.member_type == 'committee' %}
+                        <div class="committee-actions">
+                            <form method="post" action="{% url 'update_complaint_status' complaint.id %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="status">Update Status:</label>
+                                    <select name="status" id="status">
+                                        <option value="pending" {% if complaint.status == 'pending' %}selected{% endif %}>Pending</option>
+                                        <option value="in_progress" {% if complaint.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                        <option value="resolved" {% if complaint.status == 'resolved' %}selected{% endif %}>Resolved</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="committee_notes">Committee Notes:</label>
+                                    <textarea 
+                                        name="committee_notes" 
+                                        id="committee_notes" 
+                                        placeholder="Add your notes here..."
+                                    >{{ complaint.committee_notes }}</textarea>
+                                </div>
+                                <button type="submit" class="btn-update">
+                                    <i class="fas fa-check"></i> Update Status
+                                </button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-inbox fa-2x mb-4"></i>
+                <p>No complaints found.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

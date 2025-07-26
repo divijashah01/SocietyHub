@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Society Portal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-light: #60a5fa;
+            --primary-dark: #2563eb;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-light: #475569;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--card-bg);
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color:  #3b82f6;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav a {
+            color: var(--text);
+            text-decoration: none;
+            padding: 0.625rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after {
+            width: 80%;
+        }
+
+        .nav a:hover {
+            color: var(--primary);
+        }
+
+        .main-content {
+            max-width: 1500px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px -8px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            color: var(--text);
+            margin-bottom: 1.75rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .announcement {
+            margin-bottom: 1.5rem;
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background-color: var(--background);
+            border-radius: 1rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .announcement:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .announcement:last-child {
+            margin-bottom: 0;
+        }
+
+        .announcement h3 {
+            color: var(--text);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .announcement p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .poll-option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: var(--card-bg);
+        }
+
+        .poll-option:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .poll-option input[type="radio"] {
+            width: 1.35rem;
+            height: 1.35rem;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .poll-option label {
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .payment-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 1rem;
+            top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .payment-form input {
+            width: 100%;
+            padding: 1.25rem 1rem 0.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background-color: var(--background);
+        }
+
+        .payment-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background-color: var(--card-bg);
+        }
+
+        .payment-form input:focus + label,
+        .payment-form input:not(:placeholder-shown) + label {
+            transform: translateY(-0.5rem) scale(0.85);
+            color: var(--primary);
+        }
+
+        .button {
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -2px rgba(59, 130, 246, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-left: auto;
+        }
+
+        .status-badge.urgent {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .status-badge.info {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--primary);
+        }
+
+        /*polls*/
+        .poll-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .poll-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+        }
+
+        .poll-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .poll-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .poll-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: var(--background);
+        }
+
+        .poll-option:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        .poll-option input[type="radio"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary);
+        }
+
+        .poll-end-date {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-top: 1rem;
+        }
+
+        .button {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .nav a {
+                padding: 0.5rem 0.75rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        /* Updated Input and Select Styles */
+        .payment-form .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+        .payment-form select,
+        .payment-form input {
+            width: 100%;
+            padding: 1.25rem 1rem 0.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background-color: var(--background);
+            color: var(--text);
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .payment-form select {
+            padding-right: 2.5rem; /* Space for the custom arrow */
+        }
+
+        .payment-form .input-group::after {
+            content: '▼';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
+        .payment-form select:focus,
+        .payment-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background-color: var(--card-bg);
+        }
+
+        .payment-form .input-group label {
+            position: absolute;
+            left: 1rem;
+            top: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-light);
+            transition: all 0.2s ease;
+            pointer-events: none;
+            background-color: transparent;
+        }
+
+        .payment-form select:focus + label,
+        .payment-form input:focus + label,
+        .payment-form select:not([value=""]) + label,
+        .payment-form input:not(:placeholder-shown) + label {
+            transform: translateY(-0.5rem) scale(0.85);
+            color: var(--primary);
+        }
+
+        /* Style for options within select */
+        .payment-form select option {
+            background-color: var(--card-bg);
+            color: var(--text);
+            padding: 0.75rem;
+        }
+
+        /* Hover states */
+        .payment-form select:hover,
+        .payment-form input:hover {
+            border-color: var(--primary-light);
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
+        /* Disabled states */
+        .payment-form select:disabled,
+        .payment-form input:disabled {
+            background-color: var(--background);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>{{ location }}</h1>
+            <nav class="nav">
+                
+                <a href="{% url 'view_complaints' %}">Complaints</a>
+                <a href="{% url 'logout' %}">Logout</a>
+                
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="card">
+            <h2>📢 Announcements</h2>
+            {% if announcements %}
+                        {% for announcement in announcements %}
+            <div class="announcement">
+                <h3>{{ announcement.title }}</h3>
+                                <p>{{ announcement.content }}</p>
+                                <small>Posted on {{ announcement.created_at|date:"F d, Y" }} at {{ announcement.created_at|time:"H:i" }}</small>
+                            </div>
+                            {% if not forloop.last %}
+                                <hr>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <p>No announcements yet.</p>
+                    {% endif %}
+            </div>
+
+        </section>
+
+        <section class="card">
+            <h2>📊 Active Polls</h2>
+            {% if active_polls %}
+                {% for poll in active_polls %}
+                <div class="poll-container">
+                    <!-- Poll Title -->
+                    <h3 class="poll-title">{{ poll.question }}</h3>
+                    {% if poll.id in voted_polls %}
+                                <div class="poll-results">
+                                    {% for option in poll.options.all %}
+                                        {% with vote_count=option.votes.count %}
+                                            <div class="poll-option">
+                                                <div class="option-text">{{ option.option_text }}</div>
+                                                <div class="vote-count">{{ vote_count }} votes</div>
+                                            </div>
+                                        {% endwith %}
+                                    {% endfor %}
+                                </div>
+                    {% else %}
+                    <!-- Poll Options -->
+                    <form method="post" action="{% url 'vote_poll' poll.id %}" class="poll-form">
+                        {% csrf_token %}
+                        <div class="poll-options">
+                            {% for option in poll.options.all %}
+                            <label class="poll-option">
+                                <input type="radio" name="option" value="{{ option.id }}" required>
+                                <span>{{ option.option_text }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                        
+                        <button type="submit" class="button">
+                            Submit Vote
+                        </button>
+                        
+                        <!-- Poll End Date -->
+                        <p class="poll-end-date">Ends on {{ poll.end_date|date:"F d, Y" }}</p>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>No active polls available.</p>
+            {% endif %}
+        </section>
+
+        <section class="card">
+            <h2>💳 Bills & Payments</h2>
+            <div class="payment-form">
+                <div class="input-group">
+                    <select id="billNumber" name="bill_number" required>
+                        <option value="">Select Bill Type</option>
+                        {% for bill_type in active_bill_types %}
+                        <option value="{{ bill_type.id }}">{{ bill_type.bill_number }} - {{ bill_type.description }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="billNumber">Bill Type</label>
+                </div>
+                <!--<div class="input-group">
+                    <input type="number" id="amount" placeholder=" ">
+                    <label for="amount">Amount</label>
+                </div>-->
+                <button type="button" class="button" onclick="redirectToBillQR();">
+                    View Bill QR
+                </button>
+                
+            </div>
+        </section>
+    </main>
+
+    <script>
+            function redirectToBillQR() {
+        const selectElement = document.getElementById('billNumber');
+        if (selectElement) {  // Check if element exists
+            const selectedBillId = selectElement.value;
+            if (selectedBillId) {
+                window.location.href = `/view-bill-qr/${selectedBillId}/`;
+            } else {
+                alert('Please select a bill type first');
+            }
+        }
+    }
+    </script>
+</body>
+</html>
